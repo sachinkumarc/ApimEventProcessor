@@ -1,7 +1,8 @@
-using System.Threading.Tasks;
-
-namespace ApimEventProcessor
+﻿
+namespace ApimMessageProcessor
 {
+    using System.Threading.Tasks;
+
     /// <summary>
     /// Abstracts away where the HTTP message will be relayed to
     /// </summary>

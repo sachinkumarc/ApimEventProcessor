@@ -1,4 +1,4 @@
-namespace ApimEventProcessor
+﻿namespace ApimMessageProcessor
 {
     /// <summary>
     /// Abstracts away the logging messages

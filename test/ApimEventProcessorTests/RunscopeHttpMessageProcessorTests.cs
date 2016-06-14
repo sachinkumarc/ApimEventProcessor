@@ -7,12 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using System.Threading;
-using ApimEventProcessor;
+using ApimMessageProcessor;
+using ApimMessageProcessor.RunScopeProcessor;
 
 namespace ApimEventProcessorTests
 {
     public class RunscopeHttpMessageProcessorTests
     {
+        
         [Fact]
         public async Task SendHttpRequest()
         {

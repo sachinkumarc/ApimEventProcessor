@@ -1,12 +1,16 @@
-using Runscope.Links;
-using Runscope.Messages;
-using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
-
-namespace ApimEventProcessor
+﻿
+namespace ApimMessageProcessor.RunScopeProcessor
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net.Http;
+    using System.Net.Http.Headers;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Runscope.Messages;
+    using Runscope.Links;
+
     public class RunscopeHttpMessageProcessor : IHttpMessageProcessor
     {
         private HttpClient _HttpClient;
@@ -15,11 +19,13 @@ namespace ApimEventProcessor
         public RunscopeHttpMessageProcessor(HttpClient httpClient, ILogger logger)
         {
             _HttpClient = httpClient;
-            var key = Environment.GetEnvironmentVariable("APIMEVENTS-RUNSCOPE-KEY", EnvironmentVariableTarget.Process);
+            //var key = Environment.GetEnvironmentVariable("APIMEVENTS-RUNSCOPE-KEY", EnvironmentVariableTarget.Process);
+            var key = "346baac8-88bb-4e06-b286-08530fbcfffe";
             _HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", key);
             _HttpClient.BaseAddress = new Uri("https://api.runscope.com");
-            _BucketKey = Environment.GetEnvironmentVariable("APIMEVENTS-RUNSCOPE-BUCKET", EnvironmentVariableTarget.Process);
-            _Logger = logger;
+            //_BucketKey = Environment.GetEnvironmentVariable("APIMEVENTS-RUNSCOPE-BUCKET", EnvironmentVariableTarget.Process);
+            _BucketKey = "cl03od8k1tl1";
+            _Logger = logger;   
         }
 
         public async Task ProcessHttpMessage(HttpMessage message)
@@ -47,7 +53,8 @@ namespace ApimEventProcessor
             if (runscopeResponse.IsSuccessStatusCode)
             {
                 _Logger.LogDebug("Message forwarded to Runscope");
-            } else
+            }
+            else
             {
                 _Logger.LogDebug("Failed to send request");
             }

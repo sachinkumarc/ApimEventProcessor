@@ -1,7 +1,8 @@
-using System;
-
-namespace ApimEventProcessor
+﻿
+namespace ApimMessageProcessor
 {
+    using System;
+
     public enum LogLevel { Debug, Info, Warning, Error };
 
     public class ConsoleLogger : ILogger
@@ -19,7 +20,7 @@ namespace ApimEventProcessor
             if (_LogLevel > LogLevel.Debug) return;
             WriteLine(ConsoleColor.Green, message, parameters);
         }
-     
+
         public void LogInfo(string message, params object[] parameters)
         {
             if (_LogLevel > LogLevel.Info) return;
@@ -54,6 +55,5 @@ namespace ApimEventProcessor
                 }
             }
         }
-
     }
 }

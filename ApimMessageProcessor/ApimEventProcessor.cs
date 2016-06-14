@@ -1,33 +1,12 @@
-﻿using Microsoft.ServiceBus.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-
-using System.Threading.Tasks;
-
-namespace ApimEventProcessor
+﻿
+namespace ApimMessageProcessor
 {
-    /// <summary>
-    ///  Allows the EventProcessor instances to have services injected into the constructor
-    /// </summary>
-    public class ApimHttpEventProcessorFactory : IEventProcessorFactory
-    {
-        private IHttpMessageProcessor _HttpMessageProcessor;
-        private ILogger _Logger;
+    using Microsoft.ServiceBus.Messaging;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Threading.Tasks;
 
-        public ApimHttpEventProcessorFactory(IHttpMessageProcessor httpMessageProcessor, ILogger logger)
-        {
-            _HttpMessageProcessor = httpMessageProcessor;
-            _Logger = logger;
-        }
-
-        public IEventProcessor CreateEventProcessor(PartitionContext context)
-        {
-            return new ApimEventProcessor(_HttpMessageProcessor, _Logger);
-        }
-    }
-  
-  
     /// <summary>
     /// Accepts EventData from EventHubs, converts to a HttpMessage instances and forwards it to a IHttpMessageProcessor
     /// </summary>
@@ -43,13 +22,13 @@ namespace ApimEventProcessor
             _Logger = logger;
         }
 
-  
+
         async Task IEventProcessor.ProcessEventsAsync(PartitionContext context, IEnumerable<EventData> messages)
         {
 
             foreach (EventData eventData in messages)
             {
-                _Logger.LogInfo(string.Format("Event received from partition: {0} - {1}", context.Lease.PartitionId,eventData.PartitionKey));
+                _Logger.LogInfo(string.Format("Event received from partition: {0} - {1}", context.Lease.PartitionId, eventData.PartitionKey));
 
                 try
                 {
@@ -66,7 +45,7 @@ namespace ApimEventProcessor
             if (this.checkpointStopWatch.Elapsed > TimeSpan.FromMinutes(5))
             {
                 _Logger.LogInfo("Checkpointing");
-               await context.CheckpointAsync();
+                await context.CheckpointAsync();
                 this.checkpointStopWatch.Restart();
             }
         }
@@ -91,7 +70,4 @@ namespace ApimEventProcessor
         }
 
     }
-
-
-
 }

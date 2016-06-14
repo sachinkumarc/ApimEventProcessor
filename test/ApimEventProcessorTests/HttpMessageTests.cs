@@ -1,16 +1,17 @@
-﻿using ApimEventProcessor;
-using ApimEventProcessorTests;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
-
+﻿
 namespace ApimEventProcessorTests
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Xunit;
+    using ApimEventProcessorTests;
+    using ApimMessageProcessor;
+
     public class HttpMessageTests
     {
         [Fact]

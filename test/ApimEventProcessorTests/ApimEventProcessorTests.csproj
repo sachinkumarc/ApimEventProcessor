@@ -10,10 +10,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ApimEventProcessorTests</RootNamespace>
     <AssemblyName>ApimEventProcessorTests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -63,6 +64,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationInsightMessageProcessorTests.cs" />
     <Compile Include="ContextInterfaces.cs" />
     <Compile Include="FakeContext.cs" />
     <Compile Include="HttpMessageTests.cs" />
@@ -78,9 +80,9 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ApimEventProcessor\ApimEventProcessor.csproj">
-      <Project>{9f05fa99-191c-4405-896a-5260b5b78df2}</Project>
-      <Name>ApimEventProcessor</Name>
+    <ProjectReference Include="..\..\ApimMessageProcessor\ApimMessageProcessor.csproj">
+      <Project>{b527fe2c-b951-4e7b-8340-2b4afb249d56}</Project>
+      <Name>ApimMessageProcessor</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

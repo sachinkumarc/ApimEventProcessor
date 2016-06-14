@@ -1,11 +1,12 @@
-using System;
-using System.IO;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-
-namespace ApimEventProcessor
+﻿
+namespace ApimMessageProcessor
 {
+    using System;
+    using System.IO;
+    using System.Net.Http;
+    using System.Net.Http.Headers;
+    using System.Text;
+
     /// <summary>
     /// Parser for format being sent from APIM logtoeventhub policy that contains a complete HTTP request or response message.
     /// </summary>
@@ -58,10 +59,10 @@ namespace ApimEventProcessor
             if (httpMessage.IsRequest)
             {
                 contentType.Parameters.Add(new NameValueHeaderValue("msgtype", "request"));
-                
+
                 // Using .Result isn't too evil because content is a locally buffered memory stream
                 // Although if this were hosted in a System.Web based ASP.NET host it might block
-                httpMessage.HttpRequestMessage = content.ReadAsHttpRequestMessageAsync().Result;  
+                httpMessage.HttpRequestMessage = content.ReadAsHttpRequestMessageAsync().Result;
             }
             else
             {

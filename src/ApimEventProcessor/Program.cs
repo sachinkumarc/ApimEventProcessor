@@ -1,6 +1,8 @@
 ﻿using System;
 using Microsoft.ServiceBus.Messaging;
 using System.Net.Http;
+using ApimMessageProcessor.RunScopeProcessor;
+using ApimMessageProcessor;
 
 namespace ApimEventProcessor
 {
