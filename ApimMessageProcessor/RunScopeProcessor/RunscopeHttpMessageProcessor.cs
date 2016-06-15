@@ -2,20 +2,18 @@
 namespace ApimMessageProcessor.RunScopeProcessor
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Net.Http;
     using System.Net.Http.Headers;
-    using System.Text;
     using System.Threading.Tasks;
-    using Runscope.Messages;
     using Runscope.Links;
+    using Runscope.Messages;
 
     public class RunscopeHttpMessageProcessor : IHttpMessageProcessor
     {
         private HttpClient _HttpClient;
         private ILogger _Logger;
         private string _BucketKey;
+
         public RunscopeHttpMessageProcessor(HttpClient httpClient, ILogger logger)
         {
             _HttpClient = httpClient;
