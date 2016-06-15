@@ -40,21 +40,34 @@ namespace ApimMessageProcessor
                 // First line of data is (request|response) followed by a GUID to link request to response
                 // Rest of data is in message/http format
 
-                var firstLine = sr.ReadLine().Split(':');
+                var readLine = sr.ReadLine();
+
+                if (readLine == null)
+                {
+                    throw new ArgumentException("First line is null ");
+                }
+
+                var firstLine = readLine.Split(':');
                 if (firstLine.Length < 2)
                 {
                     throw new ArgumentException("Invalid formatted event :" + data);
                 }
+
                 httpMessage.IsRequest = firstLine[0] == "request";
                 httpMessage.MessageId = Guid.Parse(firstLine[1]);
 
-                var stream = new MemoryStream(Encoding.UTF8.GetBytes(sr.ReadToEnd()));
+                string rawcontent = sr.ReadToEnd();
+                if (rawcontent == null)
+                {
+                    throw new ArgumentException("Null response message :" + data);
+                }
+
+                var stream = new MemoryStream(Encoding.UTF8.GetBytes(rawcontent));
                 stream.Position = 0;
                 content = new StreamContent(stream);
             }
 
             var contentType = new MediaTypeHeaderValue("application/http");
-            content.Headers.ContentType = contentType;
 
             if (httpMessage.IsRequest)
             {
@@ -69,6 +82,9 @@ namespace ApimMessageProcessor
                 contentType.Parameters.Add(new NameValueHeaderValue("msgtype", "response"));
                 httpMessage.HttpResponseMessage = content.ReadAsHttpResponseMessageAsync().Result;
             }
+
+            content.Headers.ContentType = contentType;
+
             return httpMessage;
         }
     }

@@ -2,30 +2,30 @@
 namespace ApimMessageProcessor.RunScopeProcessor
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Net.Http;
     using System.Net.Http.Headers;
-    using System.Text;
     using System.Threading.Tasks;
-    using Runscope.Messages;
     using Runscope.Links;
+    using Runscope.Messages;
 
     public class RunscopeHttpMessageProcessor : IHttpMessageProcessor
     {
-        private HttpClient _HttpClient;
-        private ILogger _Logger;
-        private string _BucketKey;
+        private readonly HttpClient httpClient;
+        private readonly ILogger logger;
+        private readonly string bucketKey;
+
         public RunscopeHttpMessageProcessor(HttpClient httpClient, ILogger logger)
         {
-            _HttpClient = httpClient;
+            //this.bucketKey = Environment.GetEnvironmentVariable("APIMEVENTS-RUNSCOPE-BUCKET", EnvironmentVariableTarget.Process);
             //var key = Environment.GetEnvironmentVariable("APIMEVENTS-RUNSCOPE-KEY", EnvironmentVariableTarget.Process);
+            this.bucketKey = "cl03od8k1tl1";
             var key = "346baac8-88bb-4e06-b286-08530fbcfffe";
-            _HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", key);
-            _HttpClient.BaseAddress = new Uri("https://api.runscope.com");
-            //_BucketKey = Environment.GetEnvironmentVariable("APIMEVENTS-RUNSCOPE-BUCKET", EnvironmentVariableTarget.Process);
-            _BucketKey = "cl03od8k1tl1";
-            _Logger = logger;   
+
+            this.httpClient = httpClient;
+            this.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", key);
+            this.httpClient.BaseAddress = new Uri("https://api.runscope.com");
+
+            this.logger = logger;
         }
 
         public async Task ProcessHttpMessage(HttpMessage message)
@@ -37,27 +37,25 @@ namespace ApimMessageProcessor.RunScopeProcessor
 
             if (message.IsRequest)
             {
-                _Logger.LogInfo("Processing HTTP request " + message.MessageId.ToString());
+                this.logger.LogInfo("Processing HTTP request " + message.MessageId);
                 runscopeMessage.Request = await RunscopeRequest.CreateFromAsync(message.HttpRequestMessage);
             }
             else
             {
-                _Logger.LogInfo("Processing HTTP response " + message.MessageId.ToString());
+                this.logger.LogInfo("Processing HTTP response " + message.MessageId);
                 runscopeMessage.Response = await RunscopeResponse.CreateFromAsync(message.HttpResponseMessage);
             }
 
-            var messagesLink = new MessagesLink() { Method = HttpMethod.Post };
-            messagesLink.BucketKey = _BucketKey;
-            messagesLink.RunscopeMessage = runscopeMessage;
-            var runscopeResponse = await _HttpClient.SendAsync(messagesLink.CreateRequest());
-            if (runscopeResponse.IsSuccessStatusCode)
-            {
-                _Logger.LogDebug("Message forwarded to Runscope");
-            }
-            else
-            {
-                _Logger.LogDebug("Failed to send request");
-            }
+            var messagesLink =  new MessagesLink
+                                {
+                                    Method = HttpMethod.Post,
+                                    BucketKey = this.bucketKey,
+                                    RunscopeMessage = runscopeMessage
+                                };
+
+            var runscopeResponse = await this.httpClient.SendAsync(messagesLink.CreateRequest());
+
+            this.logger.LogDebug(runscopeResponse.IsSuccessStatusCode ? "Message forwarded to Runscope" : "Failed to send request");
         }
     }
 }
